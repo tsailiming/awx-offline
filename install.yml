@@ -1,3 +1,5 @@
+# ansible-playbook -i awx_task, install.yml 
+# The Ansible Playbook will use docker connection to connect to the awx_task running container.
 ---
 - hosts: all
   connection: docker
