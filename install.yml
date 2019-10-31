@@ -1,5 +1,17 @@
 # ansible-playbook -i awx_task, install.yml 
 # The Ansible Playbook will use docker connection to connect to the awx_task running container.
+#
+# Sample directory of python packages  
+# $ find /tmp/pyvmomi/
+# /tmp/pyvmomi/
+# /tmp/pyvmomi/certifi-2019.3.9-py2.py3-none-any.whl
+# /tmp/pyvmomi/pyvmomi-6.7.1.2018.12.zip
+# /tmp/pyvmomi/idna-2.8-py2.py3-none-any.whl
+# /tmp/pyvmomi/urllib3-1.25.3-py2.py3-none-any.whl
+# /tmp/pyvmomi/chardet-3.0.4-py2.py3-none-any.whl
+# /tmp/pyvmomi/requests-2.22.0-py2.py3-none-any.whl
+# /tmp/pyvmomi/six-1.12.0-py2.py3-none-any.whl
+
 ---
 - hosts: all
   connection: docker
