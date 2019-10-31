@@ -1,0 +1,54 @@
+---
+- hosts: all
+  connection: docker
+  gather_facts: false
+  
+  tasks:
+    - name: Copy files
+      copy:
+        src: ../download/{{item}}
+        dest: /tmp/
+      with_items:
+        - awx_task_centos
+        - pyvmomi
+        - ovirt-engine-sdk-python
+        - pywinrm
+
+    - name: Install packages
+      yum:
+        name: 
+          - /tmp/awx_task_centos/python36-3.6.8-1.el7.x86_64.rpm
+          - /tmp/awx_task_centos/python36-devel-3.6.8-1.el7.x86_64.rpm
+          - /tmp/awx_task_centos/python36-libs-3.6.8-1.el7.x86_64.rpm
+          - /tmp/awx_task_centos/python36-gssapi-1.3.0-5.el7.x86_64.rpm
+          - /tmp/awx_task_centos/gcc-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/libxml2-devel-2.9.1-6.el7_2.3.x86_64.rpm
+          - /tmp/awx_task_centos/libgomp-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/cpp-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/openssl-devel-1.0.2k-16.el7_6.1.x86_64.rpm
+          - /tmp/awx_task_centos/krb5-devel-1.15.1-37.el7_6.x86_64.rpm
+          - /tmp/awx_task_centos/libgcc-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/libgcc-4.8.5-36.el7_6.2.i686.rpm
+          - /tmp/awx_task_centos/libstdc++-4.8.5-36.el7_6.2.i686.rpm
+          - /tmp/awx_task_centos/libstdc++-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/libstdc++-devel-4.8.5-36.el7_6.2.x86_64.rpm
+          - /tmp/awx_task_centos/python36-six-1.11.0-3.el7.noarch.rpm
+          - /tmp/awx_task_centos/python36-decorator-4.0.11-2.el7.noarch.rpm
+        disablerepo: '*'
+        state: present
+
+    - name: Install Ansible dependencies
+      pip:
+        name: "{{item.name}}"
+        extra_args: "--find-links=file://{{item.path}} --no-index {{item.extra}}"
+        virtualenv: /var/lib/awx/venv/awx
+      with_items:
+        - {'name': pyvmomi, 'path': /tmp/pyvmomi, 'extra': ''}
+        - {'name': pycurl, 'path': /tmp/ovirt-engine-sdk-python, 'extra': '--global-option=--with-openssl'}
+        - {'name': ovirt-engine-sdk-python, 'path': /tmp/ovirt-engine-sdk-python, 'extra': ''}
+        - {'name': pywinrm, 'path': /tmp/pywinrm, 'extra': ''}
+        - {'name': 'pywinrm[credssp]', 'path': /tmp/pywinrm, 'extra': ''}
+        - {'name': 'pywinrm[kerberos]', 'path': /tmp/pywinrm, 'extra': ''}
+
+
+       
